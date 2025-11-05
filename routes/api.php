@@ -14,8 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('projects', ProjectController::class)->only(['index','store','show','update','destroy']);
 
     Route::apiResource('boards', BoardController::class)->only(['index','store','show','update']);
+    Route::patch('/columns/reorder', [ColumnController::class, 'reorder'])->name('columns.reorder');
     Route::apiResource('columns', ColumnController::class)->only(['index','store','update','destroy']);
-    Route::patch('/columns/reorder', [ColumnController::class, 'reorder']);
 
     Route::apiResource('issues', IssueController::class)->only(['index','store','show','update','destroy']);
     Route::patch('/issues/{issue}/move', [IssueController::class, 'move']);
