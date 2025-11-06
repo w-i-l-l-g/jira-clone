@@ -7,9 +7,12 @@ use App\Http\Controllers\Api\{OrganizationController, ProjectController, BoardCo
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', fn (Request $r) => $r->user());
 
-    Route::apiResource('orgs', OrganizationController::class)->only(['index','store','show','update']);
+    // Route::apiResource('orgs', OrganizationController::class)->only(['index','store','show','update']);
+    Route::get('/orgs', [OrganizationController::class, 'index']);
+    Route::post('/orgs', [OrganizationController::class, 'store']);
     Route::get('/orgs/{org}/members', [OrganizationController::class, 'members']);
-    Route::post('/orgs/{org}/members', [OrganizationController::class, 'invite']); // stub for later
+    Route::get('/orgs/{org:slug}', [OrganizationController::class, 'show']);
+    Route::put('/orgs/{org:slug}', [OrganizationController::class, 'update']);
 
     Route::apiResource('projects', ProjectController::class)->only(['index','store','show','update','destroy']);
 

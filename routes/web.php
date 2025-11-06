@@ -1,27 +1,20 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::redirect('/', '/orgs');
+    Route::get('/orgs', fn () => Inertia::render('Orgs/Index'))->name('dashboard');
+    Route::get('/orgs/{slug}', fn (string $slug) => Inertia::render('Orgs/Show', [
+        'slug' => $slug,
+    ]))->name('orgs.show');
+    Route::get('/projects/{project}', fn ($project) =>
+        Inertia::render('Projects/Show', ['projectId' => (int) $project])
+    );
+    Route::get('/boards/{board}', fn ($board) =>
+        Inertia::render('Boards/Show', ['boardId' => (int) $board])
+    );
 });
 
 require __DIR__.'/auth.php';
